@@ -14,7 +14,7 @@ use SilverStripe\Security\Security;
 
 class AutoLoginController extends Controller
 {
-    private static $url_segment = 'auto-login';
+    private static $url_segment = 'silverstripe-auto-login';
 
     private static $allowed_actions = [
         'index',

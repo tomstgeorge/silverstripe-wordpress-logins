@@ -14,7 +14,7 @@ use SilverStripe\Security\Security;
 
 class AuthController extends Controller
 {
-    private static $url_segment = 'auth';
+    private static $url_segment = 'silverstripe-auth';
 
     private static $allowed_actions = [
         'index',
@@ -26,7 +26,7 @@ class AuthController extends Controller
     {
         return $this->jsonResponse([
             'success' => false,
-            'error' => 'Specify /auth/verify or /auth/upsert',
+            'error' => 'Specify /silverstripe-auth/verify or /silverstripe-auth/upsert',
         ], 400);
     }
 
