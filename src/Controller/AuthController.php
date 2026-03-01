@@ -10,7 +10,6 @@ use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
-use SilverStripe\Security\Security;
 
 class AuthController extends Controller
 {
@@ -151,21 +150,6 @@ class AuthController extends Controller
             'email' => $member->Email,
             'first_name' => $member->FirstName,
             'last_name' => $member->Surname,
-        ]);
-    }
-
-    /**
-     * Very small informational endpoint to check wiring and current user.
-     */
-    public function ping(HTTPRequest $request): HTTPResponse
-    {
-        $current = Security::getCurrentUser();
-        return $this->jsonResponse([
-            'success' => true,
-            'current_user' => $current ? [
-                'id' => $current->ID,
-                'email' => $current->Email,
-            ] : null,
         ]);
     }
 
