@@ -12,10 +12,7 @@ SilverStripe\Security\Member:
 
 SilverStripe\Control\Director:
   rules:
-    'auth': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
-    'auth/$Action': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
     'silverstripe-auth': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
     'silverstripe-auth/$Action': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
-    'auto-login': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AutoLoginController'
     'silverstripe-auto-login': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AutoLoginController'
 
