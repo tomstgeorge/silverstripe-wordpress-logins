@@ -22,7 +22,7 @@ class MemberPasswordSyncExtension extends Extension
             return;
         }
 
-        $enabled = Environment::getEnv('FATHOM_ENABLE_SS_TO_WP_SYNC_ON_PASSWORD_CHANGE');
+        $enabled = Environment::getEnv('SILVERSTRIPE_ENABLE_SS_TO_WP_SYNC_ON_PASSWORD_CHANGE');
         if (!$enabled || strtolower((string) $enabled) === 'false') {
             return;
         }

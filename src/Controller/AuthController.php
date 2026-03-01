@@ -171,14 +171,14 @@ class AuthController extends Controller
 
     protected function checkSharedSecret(HTTPRequest $request): bool
     {
-        $secret = Environment::getEnv('FATHOM_INTERNAL_AUTH_SHARED_SECRET')
-            ?: Environment::getEnv('FATHOM_DUAL_LOGIN_SHARED_SECRET');
+        $secret = Environment::getEnv('SILVERSTRIPE_INTERNAL_AUTH_SHARED_SECRET')
+            ?: Environment::getEnv('SILVERSTRIPE_DUAL_LOGIN_SHARED_SECRET');
 
         if (!$secret) {
             return false;
         }
 
-        $header = (string) $request->getHeader('X-Fathom-Internal-Auth');
+        $header = (string) $request->getHeader('X-SilverStripe-Internal-Auth');
         if ($header === '') {
             return false;
         }

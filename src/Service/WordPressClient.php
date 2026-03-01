@@ -12,11 +12,11 @@ class WordPressClient
      * Base URL to the WordPress site, e.g. http://shop.local.test
      *
      * Configure in .env, for example:
-     *   FATHOM_WORDPRESS_BASE_URL="http://shop.local.test"
+     *   SILVERSTRIPE_WORDPRESS_BASE_URL="http://shop.local.test"
      */
     protected function getBaseUrl(): ?string
     {
-        $base = Environment::getEnv('FATHOM_WORDPRESS_BASE_URL');
+        $base = Environment::getEnv('SILVERSTRIPE_WORDPRESS_BASE_URL');
         if (!$base) {
             return null;
         }
@@ -28,14 +28,14 @@ class WordPressClient
      * Internal auth shared secret for securing requests to WordPress.
      *
      * Configure in .env, for example:
-     *   FATHOM_INTERNAL_AUTH_SHARED_SECRET="a-long-random-string"
+     *   SILVERSTRIPE_INTERNAL_AUTH_SHARED_SECRET="a-long-random-string"
      *
-     * Falls back to FATHOM_DUAL_LOGIN_SHARED_SECRET if not set.
+     * Falls back to SILVERSTRIPE_DUAL_LOGIN_SHARED_SECRET if not set.
      */
     protected function getSharedSecret(): ?string
     {
-        $secret = Environment::getEnv('FATHOM_INTERNAL_AUTH_SHARED_SECRET')
-            ?: Environment::getEnv('FATHOM_DUAL_LOGIN_SHARED_SECRET');
+        $secret = Environment::getEnv('SILVERSTRIPE_INTERNAL_AUTH_SHARED_SECRET')
+            ?: Environment::getEnv('SILVERSTRIPE_DUAL_LOGIN_SHARED_SECRET');
 
         if (!$secret) {
             return null;
@@ -46,7 +46,7 @@ class WordPressClient
 
     protected function getVerifyPath(): string
     {
-        $path = Environment::getEnv('FATHOM_WORDPRESS_VERIFY_PATH');
+        $path = Environment::getEnv('SILVERSTRIPE_WORDPRESS_VERIFY_PATH');
         if ($path) {
             return $path;
         }
@@ -56,7 +56,7 @@ class WordPressClient
 
     protected function getUpsertPath(): string
     {
-        $path = Environment::getEnv('FATHOM_WORDPRESS_UPSERT_PATH');
+        $path = Environment::getEnv('SILVERSTRIPE_WORDPRESS_UPSERT_PATH');
         if ($path) {
             return $path;
         }
@@ -83,7 +83,7 @@ class WordPressClient
         try {
             $response = $client->request('POST', $base . $this->getVerifyPath(), [
                 'headers' => [
-                    'X-Fathom-Internal-Auth' => $secret,
+                    'X-SilverStripe-Internal-Auth' => $secret,
                     'Accept' => 'application/json',
                 ],
                 'json' => [
@@ -140,7 +140,7 @@ class WordPressClient
         try {
             $response = $client->request('POST', $base . $this->getUpsertPath(), [
                 'headers' => [
-                    'X-Fathom-Internal-Auth' => $secret,
+                    'X-SilverStripe-Internal-Auth' => $secret,
                     'Accept' => 'application/json',
                 ],
                 'json' => $payload,

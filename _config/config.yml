@@ -12,7 +12,7 @@ SilverStripe\Security\Member:
 
 SilverStripe\Control\Director:
   rules:
-    'fathom-auth': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
-    'fathom-auth/$Action': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
-    'fathom-auto-login': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AutoLoginController'
+    'silverstripe-auth': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
+    'silverstripe-auth/$Action': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
+    'silverstripe-auto-login': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AutoLoginController'
 

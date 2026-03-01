@@ -10,11 +10,11 @@ class TokenService
      * Get the shared secret used for signing auto-login tokens.
      *
      * This should be configured in your SilverStripe .env, for example:
-     *   FATHOM_DUAL_LOGIN_SHARED_SECRET="a-long-random-string"
+      *   SILVERSTRIPE_DUAL_LOGIN_SHARED_SECRET="a-long-random-string"
      */
     protected function getSharedSecret(): ?string
     {
-        $secret = Environment::getEnv('FATHOM_DUAL_LOGIN_SHARED_SECRET');
+          $secret = Environment::getEnv('SILVERSTRIPE_DUAL_LOGIN_SHARED_SECRET');
 
         if (!$secret) {
             return null;
@@ -28,7 +28,7 @@ class TokenService
      */
     protected function getTokenTTL(): int
     {
-        $ttl = Environment::getEnv('FATHOM_DUAL_LOGIN_TOKEN_TTL');
+        $ttl = Environment::getEnv('SILVERSTRIPE_DUAL_LOGIN_TOKEN_TTL');
 
         if (is_numeric($ttl) && (int) $ttl > 0) {
             return (int) $ttl;

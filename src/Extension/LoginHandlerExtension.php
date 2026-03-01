@@ -18,7 +18,7 @@ class LoginHandlerExtension extends Extension
      */
     public function afterLogin(Member $member): void
     {
-        $enabled = Environment::getEnv('FATHOM_ENABLE_SS_TO_WP_SYNC_ON_LOGIN');
+        $enabled = Environment::getEnv('SILVERSTRIPE_ENABLE_SS_TO_WP_SYNC_ON_LOGIN');
         if (!$enabled || strtolower((string) $enabled) === 'false') {
             return;
         }
