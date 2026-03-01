@@ -1,0 +1,18 @@
+---
+Name: fathom-silverstripe-wordpress-logins
+Before: '#modelascontrollercatchallroute'
+---
+SilverStripe\Security\MemberAuthenticator\LoginHandler:
+  extensions:
+    - Fathom\SilverStripeWordpressLogins\Extension\LoginHandlerExtension
+
+SilverStripe\Security\Member:
+  extensions:
+    - Fathom\SilverStripeWordpressLogins\Extension\MemberPasswordSyncExtension
+
+SilverStripe\Control\Director:
+  rules:
+    'fathom-auth': 'Fathom\SilverStripeWordpressLogins\Controller\AuthController'
+    'fathom-auth/$Action': 'Fathom\SilverStripeWordpressLogins\Controller\AuthController'
+    'fathom-auto-login': 'Fathom\SilverStripeWordpressLogins\Controller\AutoLoginController'
+
