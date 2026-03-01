@@ -1,8 +1,8 @@
 <?php
 
-namespace Fathom\SilverStripeWordpressLogins\Controller;
+namespace TomStGeorge\SilverStripeWordpressLogins\Controller;
 
-use Fathom\SilverStripeWordpressLogins\Service\TokenService;
+use TomStGeorge\SilverStripeWordpressLogins\Service\TokenService;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Fathom\SilverStripeWordpressLogins\Extension;
+namespace TomStGeorge\SilverStripeWordpressLogins\Extension;
 
-use Fathom\SilverStripeWordpressLogins\Service\WordPressClient;
+use TomStGeorge\SilverStripeWordpressLogins\Service\WordPressClient;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;

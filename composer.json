@@ -1,5 +1,5 @@
 {
-    "name": "fathom/silverstripe-wordpress-logins",
+    "name": "tomstgeorge/silverstripe-wordpress-logins",
     "description": "SilverStripe 5 module for simple, symmetric login and password sync with WordPress, plus optional auto-login redirects.",
     "type": "silverstripe-vendormodule",
     "keywords": [
@@ -23,8 +23,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Fathom\\SilverStripeWordpressLogins\\": "src/",
-            "Fathom\\SilverStripeWordpressLogins\\Tests\\": "tests/php/"
+            "TomStGeorge\\SilverStripeWordpressLogins\\": "src/",
+            "TomStGeorge\\SilverStripeWordpressLogins\\Tests\\": "tests/php/"
         }
     },
     "extra": {

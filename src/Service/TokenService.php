@@ -1,6 +1,6 @@
 <?php
 
-namespace Fathom\SilverStripeWordpressLogins\Service;
+namespace TomStGeorge\SilverStripeWordpressLogins\Service;
 
 use SilverStripe\Core\Environment;
 
