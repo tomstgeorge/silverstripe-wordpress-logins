@@ -6,6 +6,10 @@ SilverStripe\Security\MemberAuthenticator\LoginHandler:
   extensions:
     - TomStGeorge\SilverStripeWordpressLogins\Extension\LoginHandlerExtension
 
+SilverStripe\Security\MemberAuthenticator\LogoutHandler:
+  extensions:
+    - TomStGeorge\SilverStripeWordpressLogins\Extension\LogoutHandlerExtension
+
 SilverStripe\Security\Member:
   extensions:
     - TomStGeorge\SilverStripeWordpressLogins\Extension\MemberPasswordSyncExtension
@@ -23,4 +27,5 @@ SilverStripe\Control\Director:
     'silverstripe-auth': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
     'silverstripe-auth/$Action': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'
     'silverstripe-auto-login': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AutoLoginController'
+    'silverstripe-auto-logout': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AutoLogoutController'
 

@@ -12,6 +12,8 @@ use SilverStripe\Security\Security;
 
 class SSWPAutoLoginMiddleware implements HTTPMiddleware
 {
+    private const SESSION_PENDING_WP_LOGOUT_TOKEN = 'SilverStripeWordpressLogins.PendingWPLogoutToken';
+
     public function process(HTTPRequest $request, callable $delegate)
     {
         $response = $delegate($request);
@@ -22,6 +24,16 @@ class SSWPAutoLoginMiddleware implements HTTPMiddleware
 
         if (!$this->shouldInject($request, $response)) {
             return $response;
+        }
+
+        $pendingLogoutToken = (string) $request->getSession()->get(self::SESSION_PENDING_WP_LOGOUT_TOKEN);
+        if ($pendingLogoutToken !== '') {
+            $iframe = $this->buildLogoutIframe($pendingLogoutToken);
+            if ($iframe !== null) {
+                $request->getSession()->clear(self::SESSION_PENDING_WP_LOGOUT_TOKEN);
+                $response->setBody($this->injectIframe((string) $response->getBody(), $iframe));
+                return $response;
+            }
         }
 
         $member = Security::getCurrentUser();
@@ -36,13 +48,11 @@ class SSWPAutoLoginMiddleware implements HTTPMiddleware
             return $response;
         }
 
-        $base = Environment::getEnv('SILVERSTRIPE_WORDPRESS_PUBLIC_BASE_URL')
-            ?: Environment::getEnv('SILVERSTRIPE_WORDPRESS_BASE_URL');
+        $base = $this->getWordPressBaseUrl();
         if (!$base) {
             return $response;
         }
 
-        $base = rtrim((string) $base, '/');
         $redirect = (string) (Environment::getEnv('SILVERSTRIPE_WORDPRESS_AUTOLOGIN_REDIRECT') ?: '/my-account/');
         if ($redirect === '' || $redirect[0] !== '/') {
             $redirect = '/' . ltrim($redirect, '/');
@@ -50,21 +60,7 @@ class SSWPAutoLoginMiddleware implements HTTPMiddleware
 
         $src = $base . '/?silverstripe_wp_autologin=1&token=' . rawurlencode($token) . '&redirect=' . rawurlencode($redirect);
         $iframe = '<iframe src="' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '" style="display:none !important;width:0;height:0;border:0;" aria-hidden="true" tabindex="-1" data-silverstripe-wp-autologin="1"></iframe>';
-
-        $body = (string) $response->getBody();
-        if ($body === '' || strpos($body, 'data-silverstripe-wp-autologin="1"') !== false) {
-            return $response;
-        }
-
-        if (stripos($body, '</head>') !== false) {
-            $body = preg_replace('/<\/head>/i', $iframe . '</head>', $body, 1) ?? $body;
-        } elseif (stripos($body, '</body>') !== false) {
-            $body = preg_replace('/<\/body>/i', $iframe . '</body>', $body, 1) ?? $body;
-        } else {
-            $body .= $iframe;
-        }
-
-        $response->setBody($body);
+        $response->setBody($this->injectIframe((string) $response->getBody(), $iframe));
         return $response;
     }
 
@@ -89,10 +85,58 @@ class SSWPAutoLoginMiddleware implements HTTPMiddleware
         }
 
         $path = (string) $request->getURL();
-        if (stripos($path, 'silverstripe-auth') !== false || stripos($path, 'silverstripe-auto-login') !== false) {
+        if (
+            stripos($path, 'silverstripe-auth') !== false
+            || stripos($path, 'silverstripe-auto-login') !== false
+            || stripos($path, 'silverstripe-auto-logout') !== false
+        ) {
             return false;
         }
 
         return true;
+    }
+
+    protected function buildLogoutIframe(string $token): ?string
+    {
+        $base = $this->getWordPressBaseUrl();
+        if (!$base) {
+            return null;
+        }
+
+        $src = $base . '/?silverstripe_wp_autologout=1&token=' . rawurlencode($token);
+        return '<iframe src="' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '" style="display:none !important;width:0;height:0;border:0;" aria-hidden="true" tabindex="-1" data-silverstripe-wp-autologout="1"></iframe>';
+    }
+
+    protected function getWordPressBaseUrl(): ?string
+    {
+        $base = Environment::getEnv('SILVERSTRIPE_WORDPRESS_PUBLIC_BASE_URL')
+            ?: Environment::getEnv('SILVERSTRIPE_WORDPRESS_BASE_URL');
+
+        if (!$base) {
+            return null;
+        }
+
+        return rtrim((string) $base, '/');
+    }
+
+    protected function injectIframe(string $body, string $iframe): string
+    {
+        if ($body === '') {
+            return $body;
+        }
+
+        if (strpos($body, 'data-silverstripe-wp-autologin="1"') !== false || strpos($body, 'data-silverstripe-wp-autologout="1"') !== false) {
+            return $body;
+        }
+
+        if (stripos($body, '</head>') !== false) {
+            return preg_replace('/<\/head>/i', $iframe . '</head>', $body, 1) ?? $body;
+        }
+
+        if (stripos($body, '</body>') !== false) {
+            return preg_replace('/<\/body>/i', $iframe . '</body>', $body, 1) ?? $body;
+        }
+
+        return $body . $iframe;
     }
 }
