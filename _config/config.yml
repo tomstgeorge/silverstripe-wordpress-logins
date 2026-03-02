@@ -10,6 +10,14 @@ SilverStripe\Security\Member:
   extensions:
     - TomStGeorge\SilverStripeWordpressLogins\Extension\MemberPasswordSyncExtension
 
+SilverStripe\Core\Injector\Injector:
+  SSWPAutoLoginMiddleware:
+    class: TomStGeorge\SilverStripeWordpressLogins\Middleware\SSWPAutoLoginMiddleware
+  SilverStripe\Control\Director:
+    properties:
+      Middlewares:
+        SSWPAutoLoginMiddleware: '%$SSWPAutoLoginMiddleware'
+
 SilverStripe\Control\Director:
   rules:
     'silverstripe-auth': 'TomStGeorge\SilverStripeWordpressLogins\Controller\AuthController'

@@ -4,6 +4,7 @@ namespace TomStGeorge\SilverStripeWordpressLogins\Controller;
 
 use TomStGeorge\SilverStripeWordpressLogins\Service\TokenService;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
@@ -109,7 +110,7 @@ class AutoLoginController extends Controller
             $redirect = '/' . $redirect;
         }
 
-        return $this->getRequest()->getSchemeAndHost() . $redirect;
+        return rtrim(Director::absoluteBaseURL(), '/') . $redirect;
     }
 }
 
