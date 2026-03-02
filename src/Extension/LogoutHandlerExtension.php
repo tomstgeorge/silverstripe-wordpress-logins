@@ -3,6 +3,7 @@
 namespace TomStGeorge\SilverStripeWordpressLogins\Extension;
 
 use TomStGeorge\SilverStripeWordpressLogins\Service\TokenService;
+use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extension;
@@ -11,7 +12,7 @@ use SilverStripe\Security\Security;
 
 class LogoutHandlerExtension extends Extension
 {
-    private const SESSION_PENDING_WP_LOGOUT_TOKEN = 'SilverStripeWordpressLogins.PendingWPLogoutToken';
+    private const COOKIE_PENDING_WP_LOGOUT_TOKEN = 'silverstripe_wp_pending_logout_token';
 
     public function beforeLogout(): void
     {
@@ -37,6 +38,6 @@ class LogoutHandlerExtension extends Extension
             return;
         }
 
-        $request->getSession()->set(self::SESSION_PENDING_WP_LOGOUT_TOKEN, $token);
+        Cookie::set(self::COOKIE_PENDING_WP_LOGOUT_TOKEN, $token, 0);
     }
 }

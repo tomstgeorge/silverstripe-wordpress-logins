@@ -3,6 +3,7 @@
 namespace TomStGeorge\SilverStripeWordpressLogins\Middleware;
 
 use TomStGeorge\SilverStripeWordpressLogins\Service\TokenService;
+use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
@@ -12,7 +13,7 @@ use SilverStripe\Security\Security;
 
 class SSWPAutoLoginMiddleware implements HTTPMiddleware
 {
-    private const SESSION_PENDING_WP_LOGOUT_TOKEN = 'SilverStripeWordpressLogins.PendingWPLogoutToken';
+    private const COOKIE_PENDING_WP_LOGOUT_TOKEN = 'silverstripe_wp_pending_logout_token';
 
     public function process(HTTPRequest $request, callable $delegate)
     {
@@ -26,11 +27,11 @@ class SSWPAutoLoginMiddleware implements HTTPMiddleware
             return $response;
         }
 
-        $pendingLogoutToken = (string) $request->getSession()->get(self::SESSION_PENDING_WP_LOGOUT_TOKEN);
+        $pendingLogoutToken = (string) Cookie::get(self::COOKIE_PENDING_WP_LOGOUT_TOKEN);
         if ($pendingLogoutToken !== '') {
             $iframe = $this->buildLogoutIframe($pendingLogoutToken);
             if ($iframe !== null) {
-                $request->getSession()->clear(self::SESSION_PENDING_WP_LOGOUT_TOKEN);
+                Cookie::force_expiry(self::COOKIE_PENDING_WP_LOGOUT_TOKEN);
                 $response->setBody($this->injectIframe((string) $response->getBody(), $iframe));
                 return $response;
             }
