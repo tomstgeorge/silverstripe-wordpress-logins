@@ -66,8 +66,13 @@ class WordPressClient
 
     /**
      * Verify credentials against WordPress' internal auth API.
+     *
+     * Returns an array with 'email', 'first_name', 'last_name' on success,
+     * or false on failure.
+     *
+     * @return array{email: string, first_name: string, last_name: string}|false
      */
-    public function verifyCredentials(string $email, string $password): bool
+    public function verifyCredentials(string $email, string $password)
     {
         $base = $this->getBaseUrl();
         $secret = $this->getSharedSecret();
@@ -102,11 +107,15 @@ class WordPressClient
         $body = (string) $response->getBody();
         $data = json_decode($body, true);
 
-        if (!is_array($data)) {
+        if (!is_array($data) || empty($data['success'])) {
             return false;
         }
 
-        return !empty($data['success']);
+        return [
+            'email'      => (string) ($data['email'] ?? $email),
+            'first_name' => (string) ($data['first_name'] ?? ''),
+            'last_name'  => (string) ($data['last_name'] ?? ''),
+        ];
     }
 
     /**
