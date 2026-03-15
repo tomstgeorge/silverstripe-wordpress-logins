@@ -2,7 +2,14 @@
 Name: tomstgeorge-silverstripe-wordpress-logins
 Before: '#modelascontrollercatchallroute'
 ---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\Security:
+    properties:
+      Authenticators:
+        default: '%$TomStGeorge\SilverStripeWordpressLogins\Authenticator\WordPressAuthenticator'
+
 SilverStripe\Security\MemberAuthenticator\LoginHandler:
+
   extensions:
     - TomStGeorge\SilverStripeWordpressLogins\Extension\LoginHandlerExtension
 
@@ -14,6 +21,9 @@ SilverStripe\Security\Member:
   extensions:
     - TomStGeorge\SilverStripeWordpressLogins\Extension\MemberPasswordSyncExtension
 
+---
+Name: tomstgeorge-silverstripe-wordpress-logins-middleware
+---
 SilverStripe\Core\Injector\Injector:
   SSWPAutoLoginMiddleware:
     class: TomStGeorge\SilverStripeWordpressLogins\Middleware\SSWPAutoLoginMiddleware

@@ -97,10 +97,12 @@ class WordPressClient
                 ],
             ]);
         } catch (GuzzleException $e) {
+            error_log('[SS Dual Login] WP verify Guzzle error: ' . $e->getMessage());
             return false;
         }
 
         if ($response->getStatusCode() !== 200) {
+            error_log('[SS Dual Login] WP verify status code: ' . $response->getStatusCode());
             return false;
         }
 
@@ -108,9 +110,11 @@ class WordPressClient
         $data = json_decode($body, true);
 
         if (!is_array($data) || empty($data['success'])) {
+            error_log('[SS Dual Login] WP verify failed: ' . ($data['error'] ?? 'No success in response'));
             return false;
         }
 
+        error_log('[SS Dual Login] WP verify success for ' . $email);
         return [
             'email'      => (string) ($data['email'] ?? $email),
             'first_name' => (string) ($data['first_name'] ?? ''),
