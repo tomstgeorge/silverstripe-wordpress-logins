@@ -66,13 +66,8 @@ class WordPressClient
 
     /**
      * Verify credentials against WordPress' internal auth API.
-     *
-     * Returns an array with 'email', 'first_name', 'last_name' on success,
-     * or false on failure.
-     *
-     * @return array{email: string, first_name: string, last_name: string}|false
      */
-    public function verifyCredentials(string $email, string $password)
+    public function verifyCredentials(string $email, string $password): bool
     {
         $base = $this->getBaseUrl();
         $secret = $this->getSharedSecret();
@@ -97,29 +92,21 @@ class WordPressClient
                 ],
             ]);
         } catch (GuzzleException $e) {
-            error_log('[SS Dual Login] WP verify Guzzle error: ' . $e->getMessage());
             return false;
         }
 
         if ($response->getStatusCode() !== 200) {
-            error_log('[SS Dual Login] WP verify status code: ' . $response->getStatusCode());
             return false;
         }
 
         $body = (string) $response->getBody();
         $data = json_decode($body, true);
 
-        if (!is_array($data) || empty($data['success'])) {
-            error_log('[SS Dual Login] WP verify failed: ' . ($data['error'] ?? 'No success in response'));
+        if (!is_array($data)) {
             return false;
         }
 
-        error_log('[SS Dual Login] WP verify success for ' . $email);
-        return [
-            'email'      => (string) ($data['email'] ?? $email),
-            'first_name' => (string) ($data['first_name'] ?? ''),
-            'last_name'  => (string) ($data['last_name'] ?? ''),
-        ];
+        return !empty($data['success']);
     }
 
     /**

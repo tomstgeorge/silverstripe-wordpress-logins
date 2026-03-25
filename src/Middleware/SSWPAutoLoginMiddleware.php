@@ -85,12 +85,17 @@ class SSWPAutoLoginMiddleware implements HTTPMiddleware
             return false;
         }
 
-        $path = (string) $request->getURL();
-        if (
-            stripos($path, 'silverstripe-auth') !== false
-            || stripos($path, 'silverstripe-auto-login') !== false
-            || stripos($path, 'silverstripe-auto-logout') !== false
-        ) {
+        // Only inject on active frontend pages (ContentController)
+        if (!class_exists(\SilverStripe\Control\Controller::class) || !\SilverStripe\Control\Controller::has_curr()) {
+            return false;
+        }
+        $controller = \SilverStripe\Control\Controller::curr();
+        if (!is_a($controller, 'SilverStripe\\CMS\\Controllers\\ContentController')) {
+            return false;
+        }
+
+        $body = (string) $response->getBody();
+        if (stripos($body, '</head>') === false && stripos($body, '</body>') === false) {
             return false;
         }
 

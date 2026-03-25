@@ -55,17 +55,11 @@ class LoginHandlerExtension extends Extension
     {
         /** @var WordPressClient $client */
         $client = Injector::inst()->get(WordPressClient::class);
-        $userData = $client->verifyCredentials($email, $password);
-        error_log('[SS Dual Login] tryCreateMemberFromWordPress: verifyCredentials for ' . $email . ' result: ' . var_export($userData, true));
-        if ($userData) {
+        $verified = $client->verifyCredentials($email, $password);
+        error_log('[SS Dual Login] tryCreateMemberFromWordPress: verifyCredentials for ' . $email . ' result: ' . var_export($verified, true));
+        if ($verified) {
             $member = Member::create();
             $member->Email = $email;
-            if (!empty($userData['first_name'])) {
-                $member->FirstName = $userData['first_name'];
-            }
-            if (!empty($userData['last_name'])) {
-                $member->Surname = $userData['last_name'];
-            }
             $member->changePassword($password);
             $member->write();
             error_log('[SS Dual Login] tryCreateMemberFromWordPress: created Member for ' . $email);
